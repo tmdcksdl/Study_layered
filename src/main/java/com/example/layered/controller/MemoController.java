@@ -6,13 +6,11 @@ import com.example.layered.entity.Memo;
 import com.example.layered.service.MemoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,23 +59,36 @@ public class MemoController {
         return new ResponseEntity<>(memoService.saveMemo(dto), HttpStatus.CREATED);
     }
 
-    /**
-     2. 비지니스 로직
-     MemoId 식별자 계산 (Repository)
-     식별자가 1씩 증가 하도록 만듦
-     이것은 원래 데이터베이스의 역할이다. -> Repository로 옮길 예정
-     */
+    @GetMapping
+    public List<MemoResponseDto> findAllMemos() {  // 전체 조회이기 때문에 전달받을 파라미터가 없어도 된다.
 
-    /**
-     요청받은 데이터로 Memo 객체 생성 (Service)
-     생성한 Repository를 호출해서 저장하도록 만드는 것은 Service Layer의 영역이다. -> Service Layer로 옮길 예정
-     */
+        return memoService.findAllMemos();
+    }
 
-    /**
-     3. 데이터베이스 상호작용
-     Inmemory DB에 Memo 저장 (Repository)
-     데이터베이스와 실제로 상호작용하는 부분 -> Repository로 옮길 예정
-     */
+    @GetMapping("/{id}")
+    public ResponseEntity<MemoResponseDto> findMemoById(@PathVariable Long id) {
+
+        return new ResponseEntity<>(memoService.findMemoById(id), HttpStatus.OK);
+    }
+
+
 }
 
 
+/**
+ 2. 비지니스 로직
+ MemoId 식별자 계산 (Repository)
+ 식별자가 1씩 증가 하도록 만듦
+ 이것은 원래 데이터베이스의 역할이다. -> Repository로 옮길 예정
+ */
+
+/**
+ 요청받은 데이터로 Memo 객체 생성 (Service)
+ 생성한 Repository를 호출해서 저장하도록 만드는 것은 Service Layer의 영역이다. -> Service Layer로 옮길 예정
+ */
+
+/**
+ 3. 데이터베이스 상호작용
+ Inmemory DB에 Memo 저장 (Repository)
+ 데이터베이스와 실제로 상호작용하는 부분 -> Repository로 옮길 예정
+ */
