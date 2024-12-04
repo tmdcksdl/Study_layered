@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Memo {
 
-    @Setter  // Respository Layer에서 식별자 값을 Setting해주기 위해 사용한다.
+    // Respository Layer에서 식별자 값을 Setting해주기 위해 사용한다.
     private Long id;  // @Setter를 통해 id만 수정할 수 있도록 해준다. 클래스에 @Setter가 붙게 되면 전체 필드를 수정할 수 있다. 꼭 변경해야 되는 값만 @Setter 붙여줘야 한다.
     private String title;
     private String contents;
