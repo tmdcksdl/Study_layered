@@ -12,7 +12,7 @@ public interface MemoRepository {
      * @param memo - id가 없는 상태로 Repository Layer에 전달된다.
      * @return Memo
      */
-    Memo saveMemo(Memo memo);
+    MemoResponseDto saveMemo(Memo memo);
 
     List<MemoResponseDto> findAllMemos();
 
