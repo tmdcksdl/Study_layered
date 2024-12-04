@@ -2,11 +2,13 @@ package com.example.layered.repository;
 
 import com.example.layered.dto.MemoResponseDto;
 import com.example.layered.entity.Memo;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -57,13 +59,29 @@ public class JdbcTemplateMemoRepository implements MemoRepository{
     }
 
     @Override
+    public Memo findMemoByIdOrElseThrow(Long id) {
+
+        List<Memo> result = jdbcTemplate.query("SELECT * FROM memo WHERE id = ?", memoRowMapperV2(), id);
+
+        return result.stream().findAny().orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exists id = " + id));
+    }
+
+    @Override
     public int updateMemo(Long id, String title, String contents) {
         // 쿼리의 영향을 받은 row 수를 int로 반환한다.
         return jdbcTemplate.update("UPDATE memo SET title = ?, contents = ? WHERE id = ?", title, contents, id);
     }
 
     @Override
-    public void deleteMemo(Long id) {
+    public int updateTitle(Long id, String title) {
+        // 쿼리의 영향을 받은 row 수를 int로 반환한다.
+        return jdbcTemplate.update("UPDATE memo SET title = ? WHERE id = ?", title, id);
+    }
+
+    @Override
+    public int deleteMemo(Long id) {
+
+        return jdbcTemplate.update("DELETE FROM memo WHERE id = ?", id);
 
     }
 
